@@ -292,7 +292,7 @@ int main(int argc, char *argv[])
 
 	for (i=1; i <= ifo_zero->vts_atrt->nr_of_vtss; i++) {
 		ifo[i] = ifoOpen(dvd, i);
-		if ( !ifo[i] ) {
+		if ( !ifo[i] && opt_t == i ) {
 			fprintf( stderr, "Can't open ifo %d!\n", i);
 			return 4;
 		}
