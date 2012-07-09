@@ -1,0 +1,88 @@
+.TH "LSDVD" "1" "27 August 2005" "" ""
+
+.SH NAME
+lsdvd \- read the content info of a DVD
+.SH SYNOPSIS
+
+\fBlsdvd\fR [ \fBoptions\fR ] [-t track_number] [dvd path]
+
+.SH "DESCRIPTION"
+.PP
+An application for reading the contents of a DVD and printing the contents
+to your terminal and dump for further processing in external applications.
+.SH "OPTIONS FOR EXTRA INFORMATION"
+.PP
+.TP
+\fB-a \fR
+Dump information about audio streams.
+.TP
+\fB-d \fR
+Dump information about cells.
+.TP
+\fB-n \fR
+Dump information about angles (video layers).
+.TP
+\fB-c \fR
+Dump chapter information.
+.TP
+\fB-s \fR
+Dump subpicture information (e.g. subtitles).
+.TP
+\fB-P \fR
+Dump palette information.
+.TP
+\fB-v \fR
+Dump video information.
+.TP
+\fB-x \fR
+Dump all information.
+
+.SH "FORMATTING OPTIONS"
+.PP
+.TP
+\fB-Oh \fR
+Dump output human readable (default setting).
+
+.TP
+\fB-Op \fR
+Dump output as a Perl hash. (Using -p is deprecated).
+
+.TP
+\fB-Oy \fR
+Dump output as Python.
+
+.TP
+\fB-Or \fR
+Dump output in Ruby format.
+
+.TP
+\fB-Ox \fR
+Dump output in XML.
+
+.SH "OTHER OPTIONS"
+.PP
+.TP
+\fB-h \fR
+Display help.
+
+.TP
+\fB-q \fR
+Quiet output - do not summarize output.
+
+.TP
+\fB-V \fR
+Display version information.
+
+.SH "LICENSE"
+.PP
+lsdvd is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; version 2 of the License.
+.SH "AUTHORS"
+.PP
+\fBlsdvd\fR was written by Chris Philips.
+<acid_kewpie@users.sourceforge.net>
+.PP
+This manual page was written by Moritz Muehlenhoff
+<jmm@inutil.org> for the Debian GNU/Linux system (but may be used by
+others).

@@ -1,0 +1,19 @@
+dnl Process this file with autoconf to produce a configure script.
+AC_INIT(lsdvd.c)
+AM_INIT_AUTOMAKE(lsdvd, 0.16)
+CFLAGS="$CFLAGS -g -D_FILE_OFFSET_BITS=64"
+AC_PROG_CC
+
+if eval "test x$GCC = xyes"; then # Enable warnings when using GCC
+  CFLAGS="$CFLAGS -W -Wall"
+fi
+
+AC_CHECK_LIB(dvdread, DVDOpen, , AC_MSG_ERROR([libdvdread not found!]))
+AC_MSG_CHECKING([for dvdread/ifo_read.h])
+AC_TRY_COMPILE([#include <dvdread/ifo_read.h>
+		#include <stdint.h>], ,
+	AC_MSG_RESULT([yes]), 
+	AC_MSG_RESULT([no]) 
+	AC_MSG_ERROR([Header files for dvdread not found]))
+AC_OUTPUT(Makefile)
+

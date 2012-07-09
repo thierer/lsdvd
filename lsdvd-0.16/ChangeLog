@@ -1,0 +1,64 @@
+13/03/06 - 0.16 still
+
+Fixed horrendous mistake that didn't print end of arrays. My bad.
+
+12/12/05 - 0.16
+
+Addition of #include <stdint.h> to support newer libdvdread versions
+Abstraction of code to new generic interface - many thanks to Michael Haggerty, sorry it took so long
+
+15/10/04 - 0.15
+
+abstraction of dvd contents to new struct
+addition of xml output
+additional -O option
+stream ids and osd palette added
+
+24/09/03 - 0.10
+
+code cleanups
+
+26/04/03 - 0.9
+
+Large restructuring to encorporate perl patch by Henk Vergonet, thanks
+more useful error codes
+finding longset title
+
+01/03/03 - 0.8
+
+kept locked away in a dark room.
+
+22/02/03 - 0.7
+
+found that reading title only works on linux and a few others, not BSD etc... might fix... might not.
+added info on what cell a chapter starts (wanted for nicer acidrip caching)
+
+26/01/03 - 0.6
+
+found out (thanks Robos's vobcopy code (robos@muon.de)) that getting the name of a disc
+is actually a complete doddle, so added that functionality.
+
+01/12/02 - 0.5
+
+added outputs for original aspect, needed for bpp calculations
+
+18/11/02 - 0.4
+
+added individual track support : -t
+added EXPERIMENTAL code for better navigation
+
+27/10/02 - 0.3
+
+more stuff... can't remember now.. very little
+
+14/10/02 - 0.2
+
+Grammar changes to output
+Removed non alpha characters from language codes.
+Spelt track correctly below.
+
+9/10/02 - 0.1 released
+
+prints information on each track, audio track, subtitle.
+
+

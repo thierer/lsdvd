@@ -1,0 +1,6 @@
+This is my lsdvd program, designed to print information about the
+contents and structure of a DVD. While intended primarily for use by
+my AcidRip program, it's handy enough by itself.. if that's what you
+want.
+
+requires libdvdread.
