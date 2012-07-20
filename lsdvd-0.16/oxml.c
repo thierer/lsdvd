@@ -3,6 +3,8 @@
 static int _xlvl = 0;
 char *_xlvl_type[256];
 
+static char *permitted_df_xml[4] = {"P&amp;S + Letter", "Pan&amp;Scan", "Letterbox", "?"};
+
 int XMLDEF_(char *name, const char *format, ...) {
 	va_list argp;
 	XMLINDENT;
@@ -83,7 +85,7 @@ void oxml_print(struct dvd_info *dvd_info) {
 			XMLDEF("aspect", "%s", dvd_info->titles[j].parameter.aspect);
 			XMLDEF("width", "%s", dvd_info->titles[j].parameter.width);
 			XMLDEF("height", "%s", dvd_info->titles[j].parameter.height);
-			XMLDEF("df", "%s", dvd_info->titles[j].parameter.df);
+			XMLDEF("df", "%s", permitted_df_xml[dvd_info->titles[j].parameter.df_code]);
 		}
 		
 		// PALETTE

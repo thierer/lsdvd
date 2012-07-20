@@ -360,7 +360,7 @@ int main(int argc, char *argv[])
 			dvd_info.titles[j].parameter.aspect = aspect_ratio[video_attr->display_aspect_ratio];
 			dvd_info.titles[j].parameter.width = video_width[video_attr->picture_size];
 			dvd_info.titles[j].parameter.height = video_height[video_attr->video_format];
-			dvd_info.titles[j].parameter.df = permitted_df[video_attr->permitted_df];
+			dvd_info.titles[j].parameter.df_code = video_attr->permitted_df;
 
 		}
 

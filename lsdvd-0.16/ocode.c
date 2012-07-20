@@ -12,6 +12,7 @@
 #define START START_()
 #define STOP STOP_()
 
+extern char *permitted_df[];
 
 /* This syntax table is not used, but is helpful as a debugging aid. */
 struct Syntax debug_syntax = {
@@ -179,7 +180,7 @@ void ocode_print(struct Syntax *syntax_, struct dvd_info *dvd_info) {
                         DEF("aspect", "'%s'", dvd_info->titles[j].parameter.aspect);
                         DEF("width", "%s", dvd_info->titles[j].parameter.width);
                         DEF("height", "%s", dvd_info->titles[j].parameter.height);
-                        DEF("df", "'%s'", dvd_info->titles[j].parameter.df);
+                        DEF("df", "'%s'", permitted_df[dvd_info->titles[j].parameter.df_code]);
                 }
 
                 // PALETTE
