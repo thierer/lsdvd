@@ -14,6 +14,7 @@
  *			  output info structures in form of a Perl module, by Henk Vergonet.
  */
 #include <dvdread/ifo_read.h>
+#include <ctype.h>
 #include <string.h>
 #include <sys/stat.h>
 #include <stdio.h>
@@ -389,7 +390,7 @@ int main(int argc, char *argv[])
 			{
 				audio_attr = &vtsi_mat->vts_audio_attr[i];
 				sprintf(lang_code, "%c%c", audio_attr->lang_code>>8, audio_attr->lang_code & 0xff);
-				if (!lang_code[0]) { lang_code[0] = 'x'; lang_code[1] = 'x'; }
+				if (!isalpha(lang_code[0]) || !isalpha(lang_code[1])) { lang_code[0] = 'x'; lang_code[1] = 'x'; }
 
 				dvd_info.titles[j].audiostreams[i].langcode = strdup(lang_code);
 				dvd_info.titles[j].audiostreams[i].language = lang_name(lang_code);
@@ -456,7 +457,7 @@ int main(int argc, char *argv[])
 			{
 				subp_attr = &vtsi_mat->vts_subp_attr[i];
 				sprintf(lang_code, "%c%c", subp_attr->lang_code>>8, subp_attr->lang_code & 0xff);
-				if (!lang_code[0]) { lang_code[0] = 'x'; lang_code[1] = 'x'; }
+				if (!isalpha(lang_code[0]) || !isalpha(lang_code[1])) { lang_code[0] = 'x'; lang_code[1] = 'x'; }
 				
 				dvd_info.titles[j].subtitles[i].langcode = strdup(lang_code);
 				dvd_info.titles[j].subtitles[i].language = lang_name(lang_code);
