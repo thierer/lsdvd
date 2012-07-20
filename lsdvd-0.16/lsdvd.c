@@ -367,7 +367,7 @@ int main(int argc, char *argv[])
 		// PALETTE
 		if (opt_P) {
 			dvd_info.titles[j].palette = malloc(16 * sizeof(int));
-        	        for (i=1; i < 16; i++) { dvd_info.titles[j].palette[i] = pgc->palette[i]; }
+        	        for (i=0; i < 16; i++) { dvd_info.titles[j].palette[i] = pgc->palette[i]; }
 		} else {
 			dvd_info.titles[j].palette = NULL;
 		}
