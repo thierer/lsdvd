@@ -422,8 +422,12 @@ int main(int argc, char *argv[])
 
 				while (cell < next - 1)
 				{
-					ms = ms + dvdtime2msec(&pgc->cell_playback[cell].playback_time);
-		               		converttime(&dvd_info.titles[j].chapters[i].playback_time, &pgc->cell_playback[cell].playback_time);
+                                        // Only use first cell of multi-angle cells
+                                        if (pgc->cell_playback[cell].block_mode <= 1)
+                                        {
+                                                ms = ms + dvdtime2msec(&pgc->cell_playback[cell].playback_time);
+                                                converttime(&dvd_info.titles[j].chapters[i].playback_time, &pgc->cell_playback[cell].playback_time);
+                                        }
 					cell++;
 				}
 				dvd_info.titles[j].chapters[i].startcell = pgc->program_map[i];
@@ -442,6 +446,8 @@ int main(int argc, char *argv[])
 			for (i=0; i<pgc->nr_of_cells; i++)
 			{
 				dvd_info.titles[j].cells[i].length = dvdtime2msec(&pgc->cell_playback[i].playback_time)/1000.0;
+                                dvd_info.titles[j].cells[i].block_mode = pgc->cell_playback[i].block_mode;
+                                dvd_info.titles[j].cells[i].block_type = pgc->cell_playback[i].block_type;
                                 converttime(&dvd_info.titles[j].cells[i].playback_time, &pgc->cell_playback[i].playback_time);
 			}
 		} else {

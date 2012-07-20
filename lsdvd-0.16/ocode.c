@@ -241,6 +241,8 @@ void ocode_print(struct Syntax *syntax_, struct dvd_info *dvd_info) {
                                 HASH(0);
                                 DEF("ix", "%d", i+1);
                                 DEF("length", "%.3f", dvd_info->titles[j].cells[i].length);
+                                DEF("block_mode", "%d", dvd_info->titles[j].cells[i].block_mode);
+                                DEF("block_type", "%d", dvd_info->titles[j].cells[i].block_type);
                                 RETURN;
                         }
                         RETURN;

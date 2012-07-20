@@ -61,6 +61,8 @@ struct dvd_info {
 		struct {
 			float length;
 			playback_time_t playback_time;
+                        int block_mode;
+                        int block_type;
 		} *cells;
 		int subtitle_count;
 		struct {

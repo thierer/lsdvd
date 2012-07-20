@@ -140,6 +140,8 @@ void oxml_print(struct dvd_info *dvd_info) {
 				XMLBOX("cell");
 				XMLDEF("ix", "%d", i+1);
 				XMLDEF("length", "%.3f", dvd_info->titles[j].cells[i].length);
+				XMLDEF("block_mode", "%d", dvd_info->titles[j].cells[i].block_mode);
+				XMLDEF("block_type", "%d", dvd_info->titles[j].cells[i].block_type);
 				XMLRETURN;
 			}
 		}
