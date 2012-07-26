@@ -75,6 +75,7 @@ char *sample_freq[2]  = {"48000", "48000"};
 char *audio_type[5]   = {"Undefined", "Normal", "Impaired", "Comments1", "Comments2"};
 char *subp_type[16]   = {"Undefined", "Normal", "Large", "Children", "reserved", "Normal_CC", "Large_CC", "Children_CC",
 	"reserved", "Forced", "reserved", "reserved", "reserved", "Director", "Large_Director", "Children_Director"};
+int   subp_id_shift[4] = {24, 8, 8, 8};
 double frames_per_s[4] = {-1.0, 25.00, -1.0, 29.97};
 
 char* program_name;
@@ -234,7 +235,7 @@ int main(int argc, char *argv[])
 	video_attr_t *video_attr;
 	subp_attr_t *subp_attr;
 	pgc_t *pgc;
-	int i, j, c, titles, cell, vts_ttn, title_set_nr;
+	int i, j, k, c, titles, cell, vts_ttn, title_set_nr;
  	char lang_code[3];
 	char *dvd_device = "/dev/dvd";
 	int has_title = 0, ret = 0;
@@ -349,8 +350,16 @@ int main(int argc, char *argv[])
 
 		dvd_info.titles[j].chapter_count_reported = ifo_zero->tt_srpt->title[j].nr_of_ptts;
 		dvd_info.titles[j].cell_count = pgc->nr_of_cells;
-		dvd_info.titles[j].audiostream_count = vtsi_mat->nr_of_vts_audio_streams;
-		dvd_info.titles[j].subtitle_count = vtsi_mat->nr_of_vts_subp_streams;  
+
+		dvd_info.titles[j].audiostream_count = 0;
+                for (k=0; k < 8; k++)
+                  if (pgc->audio_control[k] & 0x8000) 
+                    dvd_info.titles[j].audiostream_count++;
+
+                dvd_info.titles[j].subtitle_count = 0;
+                for (k=0; k < 32; k++)
+                  if (pgc->subp_control[k] & 0x80000000) 
+                    dvd_info.titles[j].subtitle_count++;
 
 		if(opt_v) {
 			dvd_info.titles[j].parameter.vts = ifo_zero->tt_srpt->title[j].title_set_nr;
@@ -386,21 +395,24 @@ int main(int argc, char *argv[])
 
 			dvd_info.titles[j].audiostreams = calloc(dvd_info.titles[j].audiostream_count, sizeof(*dvd_info.titles[j].audiostreams));
 
-			for (i=0; i<dvd_info.titles[j].audiostream_count; i++)
+			for (i=0, k=0; i<8; i++)
 			{
-				audio_attr = &vtsi_mat->vts_audio_attr[i];
+                                if ((pgc->audio_control[i] & 0x8000) == 0) continue;
+
+                                audio_attr = &vtsi_mat->vts_audio_attr[i];
 				sprintf(lang_code, "%c%c", audio_attr->lang_code>>8, audio_attr->lang_code & 0xff);
 				if (!isalpha(lang_code[0]) || !isalpha(lang_code[1])) { lang_code[0] = 'x'; lang_code[1] = 'x'; }
 
-				dvd_info.titles[j].audiostreams[i].langcode = strdup(lang_code);
-				dvd_info.titles[j].audiostreams[i].language = lang_name(lang_code);
-				dvd_info.titles[j].audiostreams[i].format = audio_format[audio_attr->audio_format];
-				dvd_info.titles[j].audiostreams[i].frequency = sample_freq[audio_attr->sample_frequency];
-				dvd_info.titles[j].audiostreams[i].quantization = quantization[audio_attr->quantization];
-				dvd_info.titles[j].audiostreams[i].channels = audio_attr->channels+1;
-				dvd_info.titles[j].audiostreams[i].ap_mode = audio_attr->application_mode;
-				dvd_info.titles[j].audiostreams[i].content = audio_type[audio_attr->lang_extension];
-				dvd_info.titles[j].audiostreams[i].streamid = audio_id[audio_attr->audio_format] + i;
+				dvd_info.titles[j].audiostreams[k].langcode = strdup(lang_code);
+				dvd_info.titles[j].audiostreams[k].language = lang_name(lang_code);
+				dvd_info.titles[j].audiostreams[k].format = audio_format[audio_attr->audio_format];
+				dvd_info.titles[j].audiostreams[k].frequency = sample_freq[audio_attr->sample_frequency];
+				dvd_info.titles[j].audiostreams[k].quantization = quantization[audio_attr->quantization];
+				dvd_info.titles[j].audiostreams[k].channels = audio_attr->channels+1;
+				dvd_info.titles[j].audiostreams[k].ap_mode = audio_attr->application_mode;
+				dvd_info.titles[j].audiostreams[k].content = audio_type[audio_attr->lang_extension];
+				dvd_info.titles[j].audiostreams[k].streamid = audio_id[audio_attr->audio_format] + (pgc->audio_control[i] >> 8 & 7);
+                                k++;
 			}
 		} else {
 			dvd_info.titles[j].audiostreams = NULL;
@@ -459,16 +471,19 @@ int main(int argc, char *argv[])
 		dvd_info.titles[j].subtitles = calloc(dvd_info.titles[j].subtitle_count, sizeof(*dvd_info.titles[j].subtitles));
 
 		if (opt_s) {
-			for (i=0; i<vtsi_mat->nr_of_vts_subp_streams; i++)
+			for (i=0, k=0; i<32; i++)
 			{
+                                if ((pgc->subp_control[i] & 0x80000000) == 0) continue;
+                          
 				subp_attr = &vtsi_mat->vts_subp_attr[i];
 				sprintf(lang_code, "%c%c", subp_attr->lang_code>>8, subp_attr->lang_code & 0xff);
 				if (!isalpha(lang_code[0]) || !isalpha(lang_code[1])) { lang_code[0] = 'x'; lang_code[1] = 'x'; }
 				
-				dvd_info.titles[j].subtitles[i].langcode = strdup(lang_code);
-				dvd_info.titles[j].subtitles[i].language = lang_name(lang_code);
-				dvd_info.titles[j].subtitles[i].content = subp_type[subp_attr->lang_extension];
-				dvd_info.titles[j].subtitles[i].streamid = 0x20 + i;				
+				dvd_info.titles[j].subtitles[k].langcode = strdup(lang_code);
+				dvd_info.titles[j].subtitles[k].language = lang_name(lang_code);
+				dvd_info.titles[j].subtitles[k].content = subp_type[subp_attr->lang_extension];
+				dvd_info.titles[j].subtitles[k].streamid = 0x20 + ((pgc->subp_control[i] >> subp_id_shift[video_attr->display_aspect_ratio]) & 0x1f);
+                                k++;
 			}
 		} else {
 			dvd_info.titles[j].subtitles = NULL;
