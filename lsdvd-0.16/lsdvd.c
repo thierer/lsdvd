@@ -465,7 +465,7 @@ int main(int argc, char *argv[])
 				dvd_info.titles[j].audiostreams[k].quantization = quantization[audio_attr->quantization];
 				dvd_info.titles[j].audiostreams[k].channels = audio_attr->channels+1;
 				dvd_info.titles[j].audiostreams[k].ap_mode = audio_attr->application_mode;
-				dvd_info.titles[j].audiostreams[k].content = audio_type[audio_attr->lang_extension];
+				dvd_info.titles[j].audiostreams[k].content = audio_type[audio_attr->code_extension];
 				dvd_info.titles[j].audiostreams[k].streamid = audio_id[audio_attr->audio_format] + (pgc->audio_control[i] >> 8 & 7);
                                 k++;
 			}
@@ -536,7 +536,7 @@ int main(int argc, char *argv[])
 				
 				dvd_info.titles[j].subtitles[k].langcode = strdup(lang_code);
 				dvd_info.titles[j].subtitles[k].language = lang_name(lang_code);
-				dvd_info.titles[j].subtitles[k].content = subp_type[subp_attr->lang_extension];
+				dvd_info.titles[j].subtitles[k].content = subp_type[subp_attr->code_extension];
 				dvd_info.titles[j].subtitles[k].streamid = 0x20 + ((pgc->subp_control[i] >> subp_id_shift[video_attr->display_aspect_ratio]) & 0x1f);
                                 k++;
 			}
