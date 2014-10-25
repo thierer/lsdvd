@@ -341,7 +341,7 @@ int main(int argc, char *argv[])
 	titles = ifo_zero->tt_srpt->nr_of_srpts;
 
 	if ( opt_t > titles || opt_t < 0) {
-		fprintf (stderr, "Only %d titles on this disc!", titles);
+		fprintf (stderr, "Only %d titles on this disc!\n", titles);
 		return 5;
 	}
 
