@@ -67,7 +67,7 @@ char *mpeg_version[2] = {"mpeg1", "mpeg2"};
 char *video_height[4] = {"480", "576", "???", "576"};
 char *video_width[4]  = {"720", "704", "352", "352"};
 char *permitted_df[4] = {"P&S + Letter", "Pan&Scan", "Letterbox", "?"};
-char *audio_format[7] = {"ac3", "?", "mpeg1", "mpeg2", "lpcm ", "sdds ", "dts"};
+char *audio_format[7] = {"ac3", "?", "mpeg1", "mpeg2", "lpcm", "sdds", "dts"};
 int   audio_id[7]     = {0x80, 0, 0xC0, 0xC0, 0xA0, 0, 0x88};
 /* 28.9.2003: Chicken run again, it has frequency index of 1.
    According to dvd::rip the frequency is 48000 */
