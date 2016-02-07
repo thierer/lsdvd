@@ -6,6 +6,8 @@ extern char *permitted_df[];
 void ohuman_print(struct dvd_info *dvd_info) {
 
 	printf("Disc Title: %s\n", dvd_info->discinfo.disc_title);
+	printf("Disc Alternative Title: %s\n", dvd_info->discinfo.disc_alt_title);
+	printf("Disc Serial Number: %s\n", dvd_info->discinfo.disc_serial_no);
 
 	int i, j;
 	for (j=0; j < dvd_info->title_count; j++) 

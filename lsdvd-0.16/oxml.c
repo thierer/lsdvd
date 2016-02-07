@@ -62,6 +62,8 @@ void oxml_print(struct dvd_info *dvd_info) {
 	XMLSTART;
 	XMLDEF("device", "%s", dvd_info->discinfo.device);
 	XMLDEF("title", "%s", dvd_info->discinfo.disc_title);
+	XMLDEF("alt_title", "%s", dvd_info->discinfo.disc_alt_title);
+	XMLDEF("serial_no", "%s", dvd_info->discinfo.disc_serial_no);
 	XMLDEF("vmg_id", "%.12s", dvd_info->discinfo.vmg_id);
 	XMLDEF("provider_id", "%.32s", dvd_info->discinfo.provider_id);
 

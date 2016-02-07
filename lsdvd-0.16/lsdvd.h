@@ -16,6 +16,8 @@ struct dvd_info {
 	struct {
 		char *device;
 		char *disc_title;
+		char *disc_serial_no;
+		char *disc_alt_title;
 		char *vmg_id;
 		char *provider_id;
 	} discinfo;

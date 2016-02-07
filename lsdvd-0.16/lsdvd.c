@@ -121,37 +121,55 @@ void converttime(playback_time_t *pt, dvd_time_t *dt)
 
 /*
  *  The following method is based on code from vobcopy, by Robos, with thanks.
+ *  Modified to also read serial number and alternative title based on
+ *  libdvdnav's src/vm/vm.c
  */
-int get_title_name(const char* dvd_device, char* title)
+int get_title_info(const char* dvd_device, char* title, char* serial_no, char* alt_title)
 {
 	FILE *filehandle = 0;
+        char buffer[2048];
 	int  i;
 
-	if (! (filehandle = fopen(dvd_device, "r"))) {
+        title[0] = '\0';
+        serial_no[0] = '\0';
+        alt_title[0] = '\0';
+
+        if (! (filehandle = fopen(dvd_device, "r"))) {
 		fprintf(stderr, "Couldn't open %s for title\n", dvd_device);
-		strcpy(title, "unknown");
 		return -1;
 	}
 
-	if ( fseek(filehandle, 32808, SEEK_SET )) {
+	if ( fseek(filehandle, 65536, SEEK_SET )) {
 		fclose(filehandle);
 		fprintf(stderr, "Couldn't seek in %s for title\n", dvd_device);
-		strcpy(title, "unknown");
 		return -1;
 	}
 
-	if ( 32 != (i = fread(title, 1, 32, filehandle)) ) {
+	if ( 2048 != fread(buffer, 1, 2048, filehandle) ) {
 		fclose(filehandle);
 		fprintf(stderr, "Couldn't read enough bytes for title.\n");
-		strcpy(title, "unknown");
 		return -1;
 	}
-
 	fclose (filehandle);
 
-	title[32] = '\0';
-	while(i-- > 2)
-	if(title[i] == ' ') title[i] = '\0';
+        for (i=25; i < 73;i++)
+              title[i - 25] = isprint(buffer[i]) ? buffer[i] : ' ';
+        title[48] = '\0';
+        for (i=47; i >= 0;i--)
+              if (title[i] == ' ') title[i] = '\0'; else break;
+
+        for (i=73; i < 81;i++)
+          serial_no[i - 73] = isprint(buffer[i]) ? buffer[i] : ' ';
+        serial_no[8] = '\0';
+        for (i=7; i >= 0;i--)
+              if (serial_no[i] == ' ') serial_no[i] = '\0'; else break;
+
+        for (i=89; i < 128;i++)
+          alt_title[i - 89] = isprint(buffer[i]) ? buffer[i] : ' ';
+        alt_title[39] = '\0';
+        for (i=38; i >= 0;i--)
+              if (alt_title[i] == ' ') alt_title[i] = '\0'; else break;
+
 	return 0;
 }
 
@@ -225,7 +243,7 @@ char output_option(char *arg)
 
 int main(int argc, char *argv[])
 {
-	char title[33];
+	char title[49], serial_no[9], alt_title[40];
 	dvd_reader_t *dvd;
 	ifo_handle_t *ifo_zero, **ifo;
 	pgcit_t *vts_pgcit;
@@ -238,7 +256,7 @@ int main(int argc, char *argv[])
 	int i, j, k, c, titles, cell, vts_ttn, title_set_nr;
  	char lang_code[3];
 	char *dvd_device = "/dev/dvd";
-	int has_title = 0, ret = 0;
+	int ret = 0;
 	int max_length = 0, max_track = 0;
 	struct stat dvd_stat;
 
@@ -307,14 +325,16 @@ int main(int argc, char *argv[])
 		return 5;
 	}
 
-	has_title = get_title_name(dvd_device, title);
+	get_title_info(dvd_device, title, serial_no, alt_title);
 
 	vmgi_mat = ifo_zero->vmgi_mat;
 
 	struct dvd_info dvd_info;
 		
 	dvd_info.discinfo.device = dvd_device;
-	dvd_info.discinfo.disc_title = has_title ? "unknown" : title;
+	dvd_info.discinfo.disc_title = title[0] ? title : "unknown";
+        dvd_info.discinfo.disc_serial_no = serial_no[0] ? serial_no : "unknown";
+        dvd_info.discinfo.disc_alt_title = alt_title[0] ? alt_title : "unknown";
 	dvd_info.discinfo.vmg_id =  vmgi_mat->vmg_identifier;
 	dvd_info.discinfo.provider_id = vmgi_mat->provider_identifier;
 	
