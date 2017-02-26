@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include "lsdvd.h"
 
-extern char *permitted_df[];
-
 void ohuman_print(struct dvd_info *dvd_info) {
 
 	printf("Disc Title: %s\n", dvd_info->discinfo.disc_title);
@@ -33,7 +31,7 @@ void ohuman_print(struct dvd_info *dvd_info) {
 			printf("FPS: %.2f, ", dvd_info->titles[j].parameter.fps);
 			printf("Format: %s, Aspect ratio: %s, ", dvd_info->titles[j].parameter.format, dvd_info->titles[j].parameter.aspect);
 			printf("Width: %s, Height: %s, ", dvd_info->titles[j].parameter.width, dvd_info->titles[j].parameter.height);
-			printf("DF: %s\n", permitted_df[dvd_info->titles[j].parameter.df_code]);
+			printf("DF: %s\n", dvd_info->titles[j].parameter.df);
 		}
 
                 // PALETTE

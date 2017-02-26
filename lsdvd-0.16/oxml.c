@@ -1,9 +1,9 @@
+#include <string.h>
+
 #include "oxml.h"
 
 static int _xlvl = 0;
 char *_xlvl_type[256];
-
-static char *permitted_df_xml[4] = {"P&amp;S + Letter", "Pan&amp;Scan", "Letterbox", "?"};
 
 int XMLDEF_(char *name, const char *format, ...) {
 	va_list argp;
@@ -56,13 +56,62 @@ void XMLSTOP_() {
 	while(_xlvl) XMLRETURN;
 }
 
+char *xml_entities(const char *text) {
+        unsigned int i, j, count = 0;
+        char *escaped;
+  
+        for (i=0; i < strlen(text); i++)
+                if (strchr("\"'&<>", text[i])) count++;
+  
+        // at most 5 additional chars per entity
+        escaped = (char *)malloc(strlen(text) + count * 5 + 1);
+  
+        for (i=0, j=0; i < strlen(text); i++)
+                switch (text[i]) {
+                        case '"':
+                                strncpy(escaped + j, "&quot;", 6);
+                                j += 6;
+                                break;
+                        case '\'':
+                                strncpy(escaped + j, "&apos;", 6);
+                                j += 6;
+                                break;
+                        case '&':
+                                strncpy(escaped + j, "&amp;", 5);
+                                j += 5;
+                                break;
+                        case '<':
+                                strncpy(escaped + j, "&lt;", 4);
+                                j += 4;
+                                break;
+                        case '>':
+                                strncpy(escaped + j, "&gt;", 4);
+                                j += 4;
+                                break;
+                        default:
+                                escaped[j++] = text[i];
+                                break;
+                }
+                
+        escaped[j] = '\0';
+          
+        return escaped;
+}
+
 void oxml_print(struct dvd_info *dvd_info) {
 	int j, i;
+        char *escaped;
 
 	XMLSTART;
-	XMLDEF("device", "%s", dvd_info->discinfo.device);
-	XMLDEF("title", "%s", dvd_info->discinfo.disc_title);
-	XMLDEF("alt_title", "%s", dvd_info->discinfo.disc_alt_title);
+        escaped = xml_entities(dvd_info->discinfo.device);
+	XMLDEF("device", "%s", escaped);
+        free(escaped);
+        escaped = xml_entities(dvd_info->discinfo.disc_title);
+	XMLDEF("title", "%s", escaped);
+        free(escaped);
+        escaped = xml_entities(dvd_info->discinfo.disc_alt_title);
+	XMLDEF("alt_title", "%s", escaped);
+        free(escaped);
 	XMLDEF("serial_no", "%s", dvd_info->discinfo.disc_serial_no);
 	XMLDEF("vmg_id", "%.12s", dvd_info->discinfo.vmg_id);
 	XMLDEF("provider_id", "%.32s", dvd_info->discinfo.provider_id);
@@ -87,7 +136,9 @@ void oxml_print(struct dvd_info *dvd_info) {
 			XMLDEF("aspect", "%s", dvd_info->titles[j].parameter.aspect);
 			XMLDEF("width", "%s", dvd_info->titles[j].parameter.width);
 			XMLDEF("height", "%s", dvd_info->titles[j].parameter.height);
-			XMLDEF("df", "%s", permitted_df_xml[dvd_info->titles[j].parameter.df_code]);
+                        escaped = xml_entities(dvd_info->titles[j].parameter.df);
+			XMLDEF("df", "%s", escaped);
+                        free(escaped);
 		}
 		
 		// PALETTE

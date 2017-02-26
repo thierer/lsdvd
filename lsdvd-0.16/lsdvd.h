@@ -37,7 +37,7 @@ struct dvd_info {
 			char *aspect;
 			char *width;
 			char *height;
-			int df_code;
+			char *df;
 		} parameter;
 		int angle_count; // no real angle detail is available... but hey.
 		int audiostream_count;
