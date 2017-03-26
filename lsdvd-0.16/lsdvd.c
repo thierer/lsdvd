@@ -349,8 +349,6 @@ int main(int argc, char *argv[])
 	// GENERAL
 	if (ifo[ifo_zero->tt_srpt->title[j].title_set_nr]->vtsi_mat) {
 
-		dvd_info.titles[j].enabled = 1;
-
 		vtsi_mat   = ifo[ifo_zero->tt_srpt->title[j].title_set_nr]->vtsi_mat;
 		vts_pgcit  = ifo[ifo_zero->tt_srpt->title[j].title_set_nr]->vts_pgcit;
 		video_attr = &vtsi_mat->vts_video_attr;
@@ -358,6 +356,12 @@ int main(int argc, char *argv[])
 		vmgi_mat = ifo_zero->vmgi_mat;
 		title_set_nr = ifo_zero->tt_srpt->title[j].title_set_nr;
 		pgc = vts_pgcit->pgci_srp[ifo[title_set_nr]->vts_ptt_srpt->title[vts_ttn - 1].ptt[0].pgcn - 1].pgc;
+
+		if (pgc->cell_playback == NULL) { // Ignore illegal title
+			continue;
+		}
+
+		dvd_info.titles[j].enabled = 1;
 
 		dvd_info.titles[j].general.length = dvdtime2msec(&pgc->playback_time)/1000.0;
 		converttime(&dvd_info.titles[j].general.playback_time, &pgc->playback_time);
