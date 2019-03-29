@@ -346,6 +346,11 @@ int main(int argc, char *argv[])
 
 	if ( opt_t == j+1 || opt_t == 0 ) {
 
+	if (ifo[ifo_zero->tt_srpt->title[j].title_set_nr] == NULL) {
+		// Ignore illegal IFOs
+		continue;
+	}
+
 	// GENERAL
 	if (ifo[ifo_zero->tt_srpt->title[j].title_set_nr]->vtsi_mat) {
 
