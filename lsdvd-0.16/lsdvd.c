@@ -173,6 +173,22 @@ int get_title_info(const char* dvd_device, char* title, char* serial_no, char* a
 	return 0;
 }
 
+char *get_disc_id(dvd_reader_t *dvd) {
+	unsigned char buf[16];
+	char *hex;
+	int i;
+
+	if (DVDDiscID(dvd, buf) == -1) return NULL;
+
+	hex = (char *)malloc(33);
+
+	for (i = 0; i < 16; i++) {
+		sprintf(hex + 2 * i, "%02x", buf[i]);
+	}
+
+	return hex;
+}
+
 char* lang_name(char* code)
 {
 	int k=0;
@@ -335,6 +351,7 @@ int main(int argc, char *argv[])
 	dvd_info.discinfo.disc_title = title[0] ? title : "unknown";
         dvd_info.discinfo.disc_serial_no = serial_no[0] ? serial_no : "unknown";
         dvd_info.discinfo.disc_alt_title = alt_title[0] ? alt_title : "unknown";
+	dvd_info.discinfo.disc_id = get_disc_id(dvd);
 	dvd_info.discinfo.vmg_id =  vmgi_mat->vmg_identifier;
 	dvd_info.discinfo.provider_id = vmgi_mat->provider_identifier;
 	

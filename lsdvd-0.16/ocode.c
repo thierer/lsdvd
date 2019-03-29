@@ -154,6 +154,9 @@ void ocode_print(struct Syntax *syntax_, struct dvd_info *dvd_info) {
         DEF("title", "'%s'", dvd_info->discinfo.disc_title);
         DEF("alt_title", "'%s'", dvd_info->discinfo.disc_alt_title);
         DEF("serial_no", "'%s'", dvd_info->discinfo.disc_serial_no);
+        if (dvd_info->discinfo.disc_id != NULL) {
+                DEF("disc_id", "'%s'", dvd_info->discinfo.disc_id);
+        }
         DEF("vmg_id", "'%.12s'", dvd_info->discinfo.vmg_id);
         DEF("provider_id", "'%.32s'", dvd_info->discinfo.provider_id);
 

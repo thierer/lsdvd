@@ -6,6 +6,9 @@ void ohuman_print(struct dvd_info *dvd_info) {
 	printf("Disc Title: %s\n", dvd_info->discinfo.disc_title);
 	printf("Disc Alternative Title: %s\n", dvd_info->discinfo.disc_alt_title);
 	printf("Disc Serial Number: %s\n", dvd_info->discinfo.disc_serial_no);
+	if (dvd_info->discinfo.disc_id) {
+		printf("libdvdread Disc-ID: %s\n", dvd_info->discinfo.disc_id);
+	}
 
 	int i, j;
 	for (j=0; j < dvd_info->title_count; j++) 
