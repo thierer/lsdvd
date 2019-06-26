@@ -19,12 +19,14 @@ struct Syntax {
         char *return_array_outer;
         char *return_hash_inner;
         char *return_array_inner;
+        char *content_quote;
 };
 
 extern struct Syntax perl_syntax;
 extern struct Syntax python_syntax;
 extern struct Syntax ruby_syntax;
 extern struct Syntax debug_syntax;
+extern struct Syntax json_syntax;
 
 void ocode_print(struct Syntax *, struct dvd_info*);
 

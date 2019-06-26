@@ -83,5 +83,6 @@ void ohuman_print(struct dvd_info *dvd_info);
 void operl_print(struct dvd_info *dvd_info);
 void oruby_print(struct dvd_info *dvd_info);
 void oxml_print(struct dvd_info *dvd_info);
+void json_print(struct dvd_info *dvd_info);
 
 #endif /* _LSDVD_H_ */
