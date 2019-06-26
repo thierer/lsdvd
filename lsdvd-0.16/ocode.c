@@ -196,129 +196,127 @@ void ocode_print(struct Syntax *syntax_, struct dvd_info *dvd_info) {
 
         for (j=0; j < dvd_info->title_count; j++)
         {
-        if ( opt_t == j+1 || opt_t == 0 ) {
+                if ( opt_t == j+1 || opt_t == 0 ) {
+                        // GENERAL
+                        if (dvd_info->titles[j].enabled) {
 
-        // GENERAL
-        if (dvd_info->titles[j].enabled) {
-
-                HASH(0);
-                DEF("ix", "%d", j+1); SEP;
-                DEF("length", "%.3f", dvd_info->titles[j].general.length); SEP;
-                DEF("vts_id", "%s%.12s%s", q, dvd_info->titles[j].general.vts_id, q);
-
-                if (dvd_info->titles[j].parameter.format != NULL ) {
-                        SEP;
-                        DEF("vts", "%d", dvd_info->titles[j].parameter.vts); SEP;
-                        DEF("ttn", "%d", dvd_info->titles[j].parameter.ttn); SEP;
-                        DEF("fps", "%.2f", dvd_info->titles[j].parameter.fps); SEP;
-                        DEF("format", "%s%s%s", q, dvd_info->titles[j].parameter.format, q); SEP;
-                        DEF("aspect", "%s%s%s", q, dvd_info->titles[j].parameter.aspect, q); SEP;
-                        DEF("width", "%s", dvd_info->titles[j].parameter.width); SEP;
-                        DEF("height", "%s", dvd_info->titles[j].parameter.height); SEP;
-                        DEF("df", "%s%s%s", q, dvd_info->titles[j].parameter.df, q);
-                }
-
-                // PALETTE
-                if (dvd_info->titles[j].palette != NULL) {
-                        SEP;
-                        ARRAY("palette");
-                        for (i=0; i < 16; i++) {
-                                ADEF("%s%06x%s", q,  dvd_info->titles[j].palette[i], q);
-                                CONTAINER_SEP(i, 16);
-                        }
-                        RETURN;
-                }
-
-                // ANGLES
-                if (dvd_info->titles[j].angle_count) { // poor check, but there's no other info anyway.
-                        SEP;
-                        DEF("angles", "%d", dvd_info->titles[j].angle_count);
-                }
-
-                // AUDIO
-                if (dvd_info->titles[j].audiostreams != NULL ) {
-                        SEP;
-                        ARRAY("audio");
-                        for (i=0; i<dvd_info->titles[j].audiostream_count; i++)
-                        {
                                 HASH(0);
-                                DEF("ix", "%d", i+1); SEP;
-                                DEF("langcode", "%s%s%s", q, dvd_info->titles[j].audiostreams[i].langcode, q); SEP;
-                                DEF("language", "%s%s%s", q, dvd_info->titles[j].audiostreams[i].language, q); SEP;
-                                DEF("format", "%s%s%s", q, dvd_info->titles[j].audiostreams[i].format, q); SEP;
-                                DEF("frequency", "%s", dvd_info->titles[j].audiostreams[i].frequency); SEP;
-                                DEF("quantization", "%s%s%s", q, dvd_info->titles[j].audiostreams[i].quantization, q); SEP;
-                                DEF("channels", "%d", dvd_info->titles[j].audiostreams[i].channels); SEP;
-                                DEF("ap_mode", "%d", dvd_info->titles[j].audiostreams[i].ap_mode); SEP;
-                                DEF("content", "%s%s%s", q, dvd_info->titles[j].audiostreams[i].content, q); SEP;
-                                DEF("streamid", "%s0x%x%s", q, dvd_info->titles[j].audiostreams[i].streamid, q);
-                                RETURN;
-                                CONTAINER_SEP(i, dvd_info->titles[j].audiostream_count);
-                        }
-                        RETURN;
-                }
+                                DEF("ix", "%d", j+1); SEP;
+                                DEF("length", "%.3f", dvd_info->titles[j].general.length); SEP;
+                                DEF("vts_id", "%s%.12s%s", q, dvd_info->titles[j].general.vts_id, q);
 
-                // CHAPTERS
-                if (dvd_info->titles[j].chapters != NULL) {
-                        SEP;
-                        /* This should probably be "chapters": */
-                        ARRAY("chapter");
-                        for (i=0; i<dvd_info->titles[j].chapter_count; i++)
-                        {
-                                HASH(0);
-                                DEF("ix", "%d", i+1); SEP;
-                                DEF("length", "%.3f", dvd_info->titles[j].chapters[i].length); SEP;
-                                DEF("startcell", "%d", dvd_info->titles[j].chapters[i].startcell);
-                                RETURN;
-                                CONTAINER_SEP(i, dvd_info->titles[j].chapter_count);
-                        }
-                        RETURN;
-                }
+                                if (dvd_info->titles[j].parameter.format != NULL ) {
+                                        SEP;
+                                        DEF("vts", "%d", dvd_info->titles[j].parameter.vts); SEP;
+                                        DEF("ttn", "%d", dvd_info->titles[j].parameter.ttn); SEP;
+                                        DEF("fps", "%.2f", dvd_info->titles[j].parameter.fps); SEP;
+                                        DEF("format", "%s%s%s", q, dvd_info->titles[j].parameter.format, q); SEP;
+                                        DEF("aspect", "%s%s%s", q, dvd_info->titles[j].parameter.aspect, q); SEP;
+                                        DEF("width", "%s", dvd_info->titles[j].parameter.width); SEP;
+                                        DEF("height", "%s", dvd_info->titles[j].parameter.height); SEP;
+                                        DEF("df", "%s%s%s", q, dvd_info->titles[j].parameter.df, q);
+                                }
 
-                // CELLS
-                if (dvd_info->titles[j].cells != NULL) {
-                        SEP;
-                        ARRAY("cell");
-                        for (i=0; i<dvd_info->titles[j].cell_count; i++)
-                        {
-                                HASH(0);
-                                DEF("ix", "%d", i+1); SEP;
-                                DEF("length", "%.3f", dvd_info->titles[j].cells[i].length); SEP;
-                                DEF("block_mode", "%d", dvd_info->titles[j].cells[i].block_mode); SEP;
-                                DEF("block_type", "%d", dvd_info->titles[j].cells[i].block_type);
-                                RETURN;
-                                CONTAINER_SEP(i, dvd_info->titles[j].cell_count);
-                        }
-                        RETURN;
-                }
+                                // PALETTE
+                                if (dvd_info->titles[j].palette != NULL) {
+                                        SEP;
+                                        ARRAY("palette");
+                                        for (i=0; i < 16; i++) {
+                                                ADEF("%s%06x%s", q,  dvd_info->titles[j].palette[i], q);
+                                                CONTAINER_SEP(i, 16);
+                                        }
+                                        RETURN;
+                                }
 
-                // SUBTITLES
-                if (dvd_info->titles[j].subtitles != NULL) {
-                        SEP;
-                        ARRAY("subp");
-                        for (i=0; i<dvd_info->titles[j].subtitle_count; i++)
-                        {
-                                HASH(0);
-                                DEF("ix", "%d", i+1); SEP;
-                                DEF("langcode", "%s%s%s", q, dvd_info->titles[j].subtitles[i].langcode, q); SEP;
-                                DEF("language", "%s%s%s", q, dvd_info->titles[j].subtitles[i].language, q); SEP;
-                                DEF("content", "%s%s%s", q, dvd_info->titles[j].subtitles[i].content, q); SEP;
-                                DEF("streamid", "%s0x%x%s", q, dvd_info->titles[j].subtitles[i].streamid, q);
+                                // ANGLES
+                                if (dvd_info->titles[j].angle_count) { // poor check, but there's no other info anyway.
+                                        SEP;
+                                        DEF("angles", "%d", dvd_info->titles[j].angle_count);
+                                }
+
+                                // AUDIO
+                                if (dvd_info->titles[j].audiostreams != NULL ) {
+                                        SEP;
+                                        ARRAY("audio");
+                                        for (i=0; i<dvd_info->titles[j].audiostream_count; i++)
+                                        {
+                                                HASH(0);
+                                                DEF("ix", "%d", i+1); SEP;
+                                                DEF("langcode", "%s%s%s", q, dvd_info->titles[j].audiostreams[i].langcode, q); SEP;
+                                                DEF("language", "%s%s%s", q, dvd_info->titles[j].audiostreams[i].language, q); SEP;
+                                                DEF("format", "%s%s%s", q, dvd_info->titles[j].audiostreams[i].format, q); SEP;
+                                                DEF("frequency", "%s", dvd_info->titles[j].audiostreams[i].frequency); SEP;
+                                                DEF("quantization", "%s%s%s", q, dvd_info->titles[j].audiostreams[i].quantization, q); SEP;
+                                                DEF("channels", "%d", dvd_info->titles[j].audiostreams[i].channels); SEP;
+                                                DEF("ap_mode", "%d", dvd_info->titles[j].audiostreams[i].ap_mode); SEP;
+                                                DEF("content", "%s%s%s", q, dvd_info->titles[j].audiostreams[i].content, q); SEP;
+                                                DEF("streamid", "%s0x%x%s", q, dvd_info->titles[j].audiostreams[i].streamid, q);
+                                                RETURN;
+                                                CONTAINER_SEP(i, dvd_info->titles[j].audiostream_count);
+                                        }
+                                        RETURN;
+                                }
+
+                                // CHAPTERS
+                                if (dvd_info->titles[j].chapters != NULL) {
+                                        SEP;
+                                        /* This should probably be "chapters": */
+                                        ARRAY("chapter");
+                                        for (i=0; i<dvd_info->titles[j].chapter_count; i++)
+                                        {
+                                                HASH(0);
+                                                DEF("ix", "%d", i+1); SEP;
+                                                DEF("length", "%.3f", dvd_info->titles[j].chapters[i].length); SEP;
+                                                DEF("startcell", "%d", dvd_info->titles[j].chapters[i].startcell);
+                                                RETURN;
+                                                CONTAINER_SEP(i, dvd_info->titles[j].chapter_count);
+                                        }
+                                        RETURN;
+                                }
+
+                                // CELLS
+                                if (dvd_info->titles[j].cells != NULL) {
+                                        SEP;
+                                        ARRAY("cell");
+                                        for (i=0; i<dvd_info->titles[j].cell_count; i++)
+                                        {
+                                                HASH(0);
+                                                DEF("ix", "%d", i+1); SEP;
+                                                DEF("length", "%.3f", dvd_info->titles[j].cells[i].length); SEP;
+                                                DEF("block_mode", "%d", dvd_info->titles[j].cells[i].block_mode); SEP;
+                                                DEF("block_type", "%d", dvd_info->titles[j].cells[i].block_type);
+                                                RETURN;
+                                                CONTAINER_SEP(i, dvd_info->titles[j].cell_count);
+                                        }
+                                        RETURN;
+                                }
+
+                                // SUBTITLES
+                                if (dvd_info->titles[j].subtitles != NULL) {
+                                        SEP;
+                                        ARRAY("subp");
+                                        for (i=0; i<dvd_info->titles[j].subtitle_count; i++)
+                                        {
+                                                HASH(0);
+                                                DEF("ix", "%d", i+1); SEP;
+                                                DEF("langcode", "%s%s%s", q, dvd_info->titles[j].subtitles[i].langcode, q); SEP;
+                                                DEF("language", "%s%s%s", q, dvd_info->titles[j].subtitles[i].language, q); SEP;
+                                                DEF("content", "%s%s%s", q, dvd_info->titles[j].subtitles[i].content, q); SEP;
+                                                DEF("streamid", "%s0x%x%s", q, dvd_info->titles[j].subtitles[i].streamid, q);
+                                                RETURN;
+                                                CONTAINER_SEP(i, dvd_info->titles[j].subtitle_count);
+                                        }
+                                        RETURN;
+                                }
                                 RETURN;
-                                CONTAINER_SEP(i, dvd_info->titles[j].subtitle_count);
+                                if (j != (dvd_info->title_count-1))
+                                        SEP;
                         }
-                        RETURN;
                 }
-        RETURN;
-        if (j != (dvd_info->title_count-1))
-                SEP;
-        }
-        }
         }
         RETURN;
         SEP;
         if (! opt_t) {
-
                 DEF("longest_track", "%d", dvd_info->longest_track);
         }
         STOP;
