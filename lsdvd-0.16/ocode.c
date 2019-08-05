@@ -3,7 +3,7 @@
 /*
    Simple helper macros for generating Perl structures
 */
-#define INDENT  { int i; for(i=0; i<_lvl; i++) printf(syntax->indent); }
+#define INDENT  { int i; for(i=0; i<_lvl; i++) printf("%s", syntax->indent); }
 #define DEF DEF_
 #define ADEF ADEF_
 #define SEP SEP_()
@@ -110,7 +110,7 @@ static char *_lvl_return[256];
 static struct Syntax *syntax = &perl_syntax;
 
 static void SEP_() {
-	printf(syntax->def_sep);
+	printf("%s", syntax->def_sep);
 }
 
 static void CONTAINER_SEP_(int idx, int bound) {
@@ -133,7 +133,7 @@ static void HASH_(char *name) {
         if (name) {
                 printf((_lvl ? syntax->hash_inner : syntax->hash_outer), name);
         } else {
-                printf(syntax->hash_anon);
+                printf("%s", syntax->hash_anon);
         }
         _lvl_return[_lvl] = _lvl ? syntax->return_hash_inner : syntax->return_hash_outer;
         ++_lvl;
@@ -162,7 +162,7 @@ static void RETURN_()  {
         _lvl--;
          printf("\n");
         INDENT;
-        printf(_lvl_return[_lvl]);
+        printf("%s", _lvl_return[_lvl]);
 }
 
 static void START_() {
