@@ -382,7 +382,7 @@ int main(int argc, char *argv[])
 		title_set_nr = ifo_zero->tt_srpt->title[j].title_set_nr;
 		pgc = vts_pgcit->pgci_srp[ifo[title_set_nr]->vts_ptt_srpt->title[vts_ttn - 1].ptt[0].pgcn - 1].pgc;
 
-		if (pgc->cell_playback == NULL) { // Ignore illegal title
+		if (pgc->cell_playback == NULL || pgc->program_map == NULL) { // Ignore illegal title
 			continue;
 		}
 
