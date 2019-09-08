@@ -267,6 +267,7 @@ int main(int argc, char *argv[])
 	ifo_handle_t *ifo_zero, **ifo;
 	pgcit_t *vts_pgcit;
 	vtsi_mat_t *vtsi_mat;
+	vts_ptt_srpt_t *vts_ptt_srpt;
 	vmgi_mat_t *vmgi_mat;
 	audio_attr_t *audio_attr;
 	video_attr_t *video_attr;
@@ -375,17 +376,19 @@ int main(int argc, char *argv[])
 		}
 
 		// GENERAL
-		vtsi_mat   = ifo[title_set_nr]->vtsi_mat;
-		if (vtsi_mat == NULL) {
+		vtsi_mat     = ifo[title_set_nr]->vtsi_mat;
+		vts_pgcit    = ifo[title_set_nr]->vts_pgcit;
+		vts_ptt_srpt = ifo[title_set_nr]->vts_ptt_srpt;
+		if (vtsi_mat == NULL || vts_pgcit == NULL || vts_ptt_srpt == NULL) {
 			continue;
 		}
 
-		vts_pgcit  = ifo[title_set_nr]->vts_pgcit;
 		video_attr = &vtsi_mat->vts_video_attr;
 		vts_ttn = ifo_zero->tt_srpt->title[j].vts_ttn;
-		pgc = vts_pgcit->pgci_srp[ifo[title_set_nr]->vts_ptt_srpt->title[vts_ttn - 1].ptt[0].pgcn - 1].pgc;
+		pgc = vts_pgcit->pgci_srp[vts_ptt_srpt->title[vts_ttn - 1].ptt[0].pgcn - 1].pgc;
 
-		if (pgc->cell_playback == NULL || pgc->program_map == NULL) { // Ignore illegal title
+		if (pgc == NULL || pgc->cell_playback == NULL || pgc->program_map == NULL) {
+			// Ignore illegal title
 			continue;
 		}
 
