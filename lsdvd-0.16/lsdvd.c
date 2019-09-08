@@ -364,22 +364,26 @@ int main(int argc, char *argv[])
 	for (j=0; j < titles; j++)
 	{
 
-	if ( opt_t == j+1 || opt_t == 0 ) {
+		if (opt_t != 0 && opt_t != j+1) {
+			continue;
+		}
 
-	if (ifo[ifo_zero->tt_srpt->title[j].title_set_nr] == NULL) {
-		// Ignore illegal IFOs
-		continue;
-	}
+		title_set_nr = ifo_zero->tt_srpt->title[j].title_set_nr;
+		if (ifo[title_set_nr] == NULL) {
+			// Ignore illegal IFOs
+			continue;
+		}
 
-	// GENERAL
-	if (ifo[ifo_zero->tt_srpt->title[j].title_set_nr]->vtsi_mat) {
+		// GENERAL
+		vtsi_mat   = ifo[title_set_nr]->vtsi_mat;
+		if (vtsi_mat == NULL) {
+			continue;
+		}
 
-		vtsi_mat   = ifo[ifo_zero->tt_srpt->title[j].title_set_nr]->vtsi_mat;
-		vts_pgcit  = ifo[ifo_zero->tt_srpt->title[j].title_set_nr]->vts_pgcit;
+		vts_pgcit  = ifo[title_set_nr]->vts_pgcit;
 		video_attr = &vtsi_mat->vts_video_attr;
 		vts_ttn = ifo_zero->tt_srpt->title[j].vts_ttn;
 		vmgi_mat = ifo_zero->vmgi_mat;
-		title_set_nr = ifo_zero->tt_srpt->title[j].title_set_nr;
 		pgc = vts_pgcit->pgci_srp[ifo[title_set_nr]->vts_ptt_srpt->title[vts_ttn - 1].ptt[0].pgcn - 1].pgc;
 
 		if (pgc->cell_playback == NULL || pgc->program_map == NULL) { // Ignore illegal title
@@ -411,7 +415,7 @@ int main(int argc, char *argv[])
                     dvd_info.titles[j].subtitle_count++;
 
 		if(opt_v) {
-			dvd_info.titles[j].parameter.vts = ifo_zero->tt_srpt->title[j].title_set_nr;
+			dvd_info.titles[j].parameter.vts = title_set_nr;
 			dvd_info.titles[j].parameter.ttn = ifo_zero->tt_srpt->title[j].vts_ttn;
 			dvd_info.titles[j].parameter.fps = frames_per_s[(pgc->playback_time.frame_u & 0xc0) >> 6];
 			dvd_info.titles[j].parameter.format = video_format[video_attr->video_format];
@@ -537,9 +541,6 @@ int main(int argc, char *argv[])
 		} else {
 			dvd_info.titles[j].subtitles = NULL;
 		}
-
- 	} // if vtsi_mat
-	} // if not -t
 	} // for each title
 	
 	if (! opt_t) { dvd_info.longest_track = max_track; }
