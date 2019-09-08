@@ -383,7 +383,6 @@ int main(int argc, char *argv[])
 		vts_pgcit  = ifo[title_set_nr]->vts_pgcit;
 		video_attr = &vtsi_mat->vts_video_attr;
 		vts_ttn = ifo_zero->tt_srpt->title[j].vts_ttn;
-		vmgi_mat = ifo_zero->vmgi_mat;
 		pgc = vts_pgcit->pgci_srp[ifo[title_set_nr]->vts_ptt_srpt->title[vts_ttn - 1].ptt[0].pgcn - 1].pgc;
 
 		if (pgc->cell_playback == NULL || pgc->program_map == NULL) { // Ignore illegal title
