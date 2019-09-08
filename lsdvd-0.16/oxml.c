@@ -221,14 +221,7 @@ void oxml_print(struct dvd_info *dvd_info) {
 	}
 
 	if (! opt_t) {
-		int max_length = 0, max_track = 0;
-		for (j=0; j < dvd_info->title_count; j++) {
-			if (dvd_info->titles[j].general.length > max_length) {
-				max_length = dvd_info->titles[j].general.length;
-				max_track = j+1;
-			}
-		}
-		XMLDEF("longest_track", "%d", max_track);
+		XMLDEF("longest_track", "%d", dvd_info->longest_track);
 	}
 	XMLSTOP;
 }
