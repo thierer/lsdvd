@@ -331,8 +331,14 @@ int main(int argc, char *argv[])
 	ifo = (ifo_handle_t **)malloc((ifo_zero->vts_atrt->nr_of_vtss + 1) * sizeof(ifo_handle_t *));
 
 	for (i=1; i <= ifo_zero->vts_atrt->nr_of_vtss; i++) {
+		if (opt_t != 0 && i != ifo_zero->tt_srpt->title[opt_t - 1].title_set_nr) {
+			// Don't read unneeded title sets if a specific title is selected
+			ifo[i] = NULL;
+			continue;
+		}
+
 		ifo[i] = ifoOpen(dvd, i);
-		if ( !ifo[i] && opt_t == i ) {
+		if ( !ifo[i] && opt_t != 0 ) {
 			fprintf( stderr, "Can't open ifo %d!\n", i);
 			return 4;
 		}
